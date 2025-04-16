@@ -1,3 +1,3 @@
 export default function IssuesPage() {
-  return <div>Все задачи</div>;
+  return <div className="text-xl font-medium p-4">Все задачи</div>;
 }

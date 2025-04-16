@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import BoardsPage from '../pages/Boards';
-import BoardPage from '../pages/Board';
-import IssuesPage from '../pages/Issues';
-import NotFoundPage from '../pages/NotFound';
+import BoardsPage from '@/pages/Boards';
+import BoardPage from '@/pages/Board';
+import IssuesPage from '@/pages/Issues';
+import NotFoundPage from '@/pages/NotFound';
 
 export default function AppRouter() {
   return (
