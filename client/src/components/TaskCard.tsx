@@ -40,7 +40,7 @@ export function TaskCard({ issue }: { issue: Task }) {
   };
 
   return (
-    <Card key={issue.id} className="overflow-hidden gap-2">
+    <Card key={issue.id} className="overflow-hidden gap-2 hover:bg-accent transition-colors duration-200">
       <CardHeader className="pb-2">
         <div className="flex items-start gap-2">
           <div className="flex-1">
