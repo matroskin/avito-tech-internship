@@ -1,10 +1,13 @@
 import { makeObservable, observable, action, computed, runInAction } from 'mobx';
-import { getIssues } from '@/api/issues/getIssues';
+import { getTasks } from '@/api/tasks/getTasks';
+import { getBoardTasks } from '@/api/boards/getBoardTasks';
+import { updateTaskStatus } from '@/api/tasks/updateTaskStatus';
 import type { Task } from '@/types/task';
 import type { ApiError } from '@/types/error';
 
 class IssueStore {
   issues: Task[] = [];
+  boardIssues: Task[] = [];
   error: ApiError | null = null;
   search: string = '';
   statusFilter: string | null = null;
@@ -13,21 +16,26 @@ class IssueStore {
   constructor() {
     makeObservable(this, {
       issues: observable,
+      boardIssues: observable,
       error: observable,
       search: observable,
       statusFilter: observable,
       boardFilter: observable,
       fetchIssuesList: action,
+      fetchBoardIssues: action,
+      updateIssueStatus: action,
+      changeIssueStatus: action,
       setSearch: action,
       setStatusFilter: action,
       setBoardFilter: action,
+      filteredBoardIssues: action,
       filteredIssues: computed,
     });
   }
 
   async fetchIssuesList() {
     try {
-      const tasks = await getIssues();
+      const tasks = await getTasks();
       runInAction(() => {
         this.issues = tasks;
         this.error = null;
@@ -62,6 +70,48 @@ class IssueStore {
       const boardMatch = this.boardFilter ? task.boardId === this.boardFilter : true;
       return (inTitle || inAssignee) && statusMatch && boardMatch;
     });
+  }
+
+  filteredBoardIssues(status: string): Task[] {
+    return this.boardIssues.filter((task) => task.status === status);
+  }
+
+  async fetchBoardIssues(boardId: number) {
+    this.boardIssues = [];
+    try {
+      const tasks = await getBoardTasks(boardId);
+      runInAction(() => {
+        this.boardIssues = tasks;
+        this.error = null;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.boardIssues = [];
+        this.error = error as ApiError;
+      });
+      console.error('Ошибка при загрузке задач доски:', this.error);
+    }
+  }
+
+  async changeIssueStatus(taskId: number, newStatus: 'Backlog' | 'InProgress' | 'Done') {
+    try {
+      await updateTaskStatus(taskId, { status: newStatus });
+      runInAction(() => {
+        this.updateIssueStatus(taskId, newStatus);
+      });
+    } catch (error) {
+      console.error('Ошибка при обновлении статуса задачи:', error);
+    }
+  }
+
+  // Обновление статуса задачи в локальном состоянии
+  updateIssueStatus(taskId: number, newStatus: 'Backlog' | 'InProgress' | 'Done') {
+    const update = (arr: Task[]) => {
+      const task = arr.find((t) => t.id === taskId);
+      if (task) task.status = newStatus;
+    };
+    update(this.issues);
+    update(this.boardIssues);
   }
 }
 

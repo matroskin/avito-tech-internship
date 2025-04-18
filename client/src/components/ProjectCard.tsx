@@ -6,7 +6,7 @@ import type { Board } from '@/types/board';
 export function ProjectCard({ board }: { board: Board }) {
   return (
     <Link to={`/board/${board.id}`} key={board.id}>
-      <Card className="h-full justify-between hover:bg-accent transition-colors duration-200">
+      <Card className="h-full justify-between hover:shadow-md transition-shadow">
         <CardHeader>
           <CardTitle className="text-xl">{board.name}</CardTitle>
           <p className="text-sm text-muted-foreground mt-2">{board.description}</p>

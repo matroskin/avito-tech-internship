@@ -40,14 +40,14 @@ export function TaskCard({ issue }: { issue: Task }) {
   };
 
   return (
-    <Card key={issue.id} className="overflow-hidden gap-2 hover:bg-accent transition-colors duration-200">
+    <Card key={issue.id} className="overflow-hidden gap-2 hover:shadow-md transition-shadow pointer">
       <CardHeader className="pb-2">
         <div className="flex items-start gap-2">
           <div className="flex-1">
             <CardTitle className={cn('text-base font-medium', issue.status === 'Done' && 'text-muted-foreground')}>
               {issue.title}
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">{issue.description}</p>
+            {/* <p className="text-sm text-muted-foreground mt-1">{issue.description}</p> */}
           </div>
         </div>
       </CardHeader>
@@ -59,7 +59,7 @@ export function TaskCard({ issue }: { issue: Task }) {
           <Badge variant="outline" className={getPriorityColor(issue.priority)}>
             {issue.priority}
           </Badge>
-          <Badge variant="outline">{issue.boardName}</Badge>
+          {issue.boardName && <Badge variant="outline">{issue.boardName}</Badge>}
         </div>
 
         <div className="flex items-center mt-4">
