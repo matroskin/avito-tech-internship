@@ -8,7 +8,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/boards" replace />} />
+        <Route path="/" element={<Navigate to="/issues" replace />} />
         <Route path="/boards" element={<BoardsPage />} />
         <Route path="/board/:id" element={<BoardPage />} />
         <Route path="/issues" element={<IssuesPage />} />
