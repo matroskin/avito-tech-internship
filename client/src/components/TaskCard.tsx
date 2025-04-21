@@ -22,7 +22,7 @@ export function TaskCard({ issue }: { issue: Task }) {
     switch (status) {
       case 'Done':
         return 'bg-green-100 text-green-800';
-      case 'In Progress':
+      case 'InProgress':
         return 'bg-blue-100 text-blue-800';
       case 'Backlog':
         return 'bg-gray-100 text-gray-800';

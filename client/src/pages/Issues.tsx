@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Layout } from '@/components/Layout';
 import { AlertDestructive } from '@/components/AlertDestructive';
 import { SkeletonCard } from '@/components/SkeletonCard';
@@ -9,10 +10,15 @@ import { IssueSearch } from '@/components/IssueSearch';
 import { StatusFilter } from '@/components/StatusFilter';
 import { BoardFilter } from '@/components/BoardFilter';
 import { EmptyState } from '@/components/EmptyState';
+import { TaskDialog } from '@/components/TaskDialog';
 import { issueStore } from '@/stores/IssueStore';
 import { boardStore } from '@/stores/BoardStore';
+import { taskModalStore } from '@/stores/TaskModalStore';
+import { createTask } from '@/api/tasks/createTask';
 
 const IssuesPage = observer(() => {
+  const [open, setOpen] = useState(false);
+
   const { filteredIssues, issues, error } = issueStore;
 
   useEffect(() => {
@@ -22,6 +28,12 @@ const IssuesPage = observer(() => {
 
   const isLoading = !error && issues.length === 0;
   const isEmptyFiltered = !error && !isLoading && filteredIssues.length === 0;
+
+  const handleCreate = async (dto: any) => {
+    await createTask(dto);
+    taskModalStore.close();
+    issueStore.fetchIssuesList();
+  };
 
   return (
     <Layout>
@@ -33,7 +45,7 @@ const IssuesPage = observer(() => {
         <AlertDestructive error={error} />
       ) : (
         <>
-          <div className="flex flex-col items-start gap-4 md:flex-row mb-6 justify-between ">
+          <div className="flex flex-col items-start gap-4 md:flex-row mb-6 justify-between">
             <IssueSearch />
             <div className="flex gap-4">
               <StatusFilter />
@@ -50,6 +62,14 @@ const IssuesPage = observer(() => {
               filteredIssues.map((issue) => <TaskCard key={issue.id} issue={issue} />)
             )}
           </div>
+
+          <div className="flex gap-4 justify-end mt-4">
+            <Button variant="outline" onClick={() => setOpen(true)}>
+              Создать задачу
+            </Button>
+          </div>
+
+          <TaskDialog open={open} onOpenChange={setOpen} mode="create" onSubmit={handleCreate} />
         </>
       )}
     </Layout>

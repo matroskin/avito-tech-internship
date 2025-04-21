@@ -1,3 +1,5 @@
+import { TaskPriorityEnum, TaskStatusEnum } from './task';
+
 export type Board = {
   id: number;
   name: string;
@@ -9,8 +11,8 @@ export type BoardTask = {
   id: number;
   title: string;
   description: string;
-  status: 'Backlog' | 'InProgress' | 'Done';
-  priority: 'Low' | 'Medium' | 'High';
+  status: TaskStatusEnum;
+  priority: TaskPriorityEnum;
   assignee: {
     id: number;
     fullName: string;

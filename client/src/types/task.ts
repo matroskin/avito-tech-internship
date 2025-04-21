@@ -2,9 +2,9 @@ export type Task = {
   id: number;
   title: string;
   description: string;
-  status: 'Backlog' | 'InProgress' | 'Done';
-  priority: 'Low' | 'Medium' | 'High';
-  boardId?: number;
+  status: TaskStatusEnum;
+  priority: TaskPriorityEnum;
+  boardId: number;
   boardName: string;
   assignee: {
     id: number;
@@ -19,17 +19,21 @@ export type CreateTaskDto = {
   boardId: number;
   title: string;
   description: string;
-  priority: 'Low' | 'Medium' | 'High';
+  priority: TaskPriorityEnum;
 };
 
 export type UpdateTaskDto = {
   assigneeId: number;
   title: string;
   description: string;
-  priority: 'Low' | 'Medium' | 'High';
-  status: 'Backlog' | 'InProgress' | 'Done';
+  priority: TaskPriorityEnum;
+  status: TaskStatusEnum;
 };
 
 export type UpdateTaskStatus = {
-  status: 'Backlog' | 'InProgress' | 'Done';
+  status: TaskStatusEnum;
 };
+
+export type TaskStatusEnum = 'Backlog' | 'InProgress' | 'Done';
+
+export type TaskPriorityEnum = 'Low' | 'Medium' | 'High';

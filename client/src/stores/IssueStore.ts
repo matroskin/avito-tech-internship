@@ -2,7 +2,7 @@ import { makeObservable, observable, action, computed, runInAction } from 'mobx'
 import { getTasks } from '@/api/tasks/getTasks';
 import { getBoardTasks } from '@/api/boards/getBoardTasks';
 import { updateTaskStatus } from '@/api/tasks/updateTaskStatus';
-import type { Task } from '@/types/task';
+import type { Task, TaskStatusEnum } from '@/types/task';
 import type { ApiError } from '@/types/error';
 
 class IssueStore {
@@ -93,7 +93,7 @@ class IssueStore {
     }
   }
 
-  async changeIssueStatus(taskId: number, newStatus: 'Backlog' | 'InProgress' | 'Done') {
+  async changeIssueStatus(taskId: number, newStatus: TaskStatusEnum) {
     try {
       await updateTaskStatus(taskId, { status: newStatus });
       runInAction(() => {
@@ -104,8 +104,7 @@ class IssueStore {
     }
   }
 
-  // Обновление статуса задачи в локальном состоянии
-  updateIssueStatus(taskId: number, newStatus: 'Backlog' | 'InProgress' | 'Done') {
+  updateIssueStatus(taskId: number, newStatus: TaskStatusEnum) {
     const update = (arr: Task[]) => {
       const task = arr.find((t) => t.id === taskId);
       if (task) task.status = newStatus;

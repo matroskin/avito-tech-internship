@@ -16,7 +16,7 @@ export function StatusFilter() {
         <SelectGroup>
           <SelectItem value="all">Все статусы</SelectItem>
           <SelectItem value="Backlog">Backlog</SelectItem>
-          <SelectItem value="InProgress">In Progress</SelectItem>
+          <SelectItem value="InProgress">InProgress</SelectItem>
           <SelectItem value="Done">Done</SelectItem>
         </SelectGroup>
       </SelectContent>
