@@ -585,7 +585,7 @@ paths:
             $ref: '#/definitions/errs.ErrorResponse'
       summary: Получить информацию о команде
       tags:
-      - ""
+      - "Команды"
   /users:
     get:
       consumes:

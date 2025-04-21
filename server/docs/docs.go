@@ -388,7 +388,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    ""
+                    "Команды"
                 ],
                 "summary": "Получить информацию о команде",
                 "parameters": [
