@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { Task } from '@/types/task';
 
-export function TaskCard({ issue }: { issue: Task }) {
+export function TaskCard({ issue, onClick }: { issue: Task; onClick?: () => void }) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'High':
@@ -40,14 +40,17 @@ export function TaskCard({ issue }: { issue: Task }) {
   };
 
   return (
-    <Card key={issue.id} className="overflow-hidden gap-2 hover:shadow-md transition-shadow pointer">
+    <Card
+      key={issue.id}
+      onClick={onClick}
+      className="overflow-hidden gap-2 hover:shadow-md transition-shadow hover:cursor-pointer"
+    >
       <CardHeader className="pb-2">
         <div className="flex items-start gap-2">
           <div className="flex-1">
             <CardTitle className={cn('text-base font-medium', issue.status === 'Done' && 'text-muted-foreground')}>
               {issue.title}
             </CardTitle>
-            {/* <p className="text-sm text-muted-foreground mt-1">{issue.description}</p> */}
           </div>
         </div>
       </CardHeader>

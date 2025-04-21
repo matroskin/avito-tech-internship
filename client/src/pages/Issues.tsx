@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,30 +10,21 @@ import { IssueSearch } from '@/components/IssueSearch';
 import { StatusFilter } from '@/components/StatusFilter';
 import { BoardFilter } from '@/components/BoardFilter';
 import { EmptyState } from '@/components/EmptyState';
-import { TaskDialog } from '@/components/TaskDialog';
 import { issueStore } from '@/stores/IssueStore';
 import { boardStore } from '@/stores/BoardStore';
 import { taskModalStore } from '@/stores/TaskModalStore';
-import { createTask } from '@/api/tasks/createTask';
 
 const IssuesPage = observer(() => {
-  const [open, setOpen] = useState(false);
-
   const { filteredIssues, issues, error } = issueStore;
 
   useEffect(() => {
     issueStore.fetchIssuesList();
     boardStore.fetchBoardsList();
+    taskModalStore.setCurrentBoardId(null);
   }, []);
 
   const isLoading = !error && issues.length === 0;
   const isEmptyFiltered = !error && !isLoading && filteredIssues.length === 0;
-
-  const handleCreate = async (dto: any) => {
-    await createTask(dto);
-    taskModalStore.close();
-    issueStore.fetchIssuesList();
-  };
 
   return (
     <Layout>
@@ -59,17 +50,17 @@ const IssuesPage = observer(() => {
             ) : isEmptyFiltered ? (
               <EmptyState message="По вашему запросу ничего не найдено" />
             ) : (
-              filteredIssues.map((issue) => <TaskCard key={issue.id} issue={issue} />)
+              filteredIssues.map((issue) => (
+                <TaskCard key={issue.id} issue={issue} onClick={() => taskModalStore.openEdit(issue)} />
+              ))
             )}
           </div>
 
           <div className="flex gap-4 justify-end mt-4">
-            <Button variant="outline" onClick={() => setOpen(true)}>
+            <Button variant="outline" onClick={() => taskModalStore.openCreate()}>
               Создать задачу
             </Button>
           </div>
-
-          <TaskDialog open={open} onOpenChange={setOpen} mode="create" onSubmit={handleCreate} />
         </>
       )}
     </Layout>

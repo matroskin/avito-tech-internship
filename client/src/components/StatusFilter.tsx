@@ -9,7 +9,7 @@ export function StatusFilter() {
         issueStore.setStatusFilter(value === 'all' ? null : value);
       }}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Фильтр по статусу" />
       </SelectTrigger>
       <SelectContent>

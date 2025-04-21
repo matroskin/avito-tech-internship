@@ -1,25 +1,23 @@
 import { observer } from 'mobx-react-lite';
-import { TaskCard } from '@/components/TaskCard';
 import { issueStore } from '@/stores/IssueStore';
+import { TaskCard } from '@/components/TaskCard';
+import { taskModalStore } from '@/stores/TaskModalStore';
 
 interface TaskStatusColumnProps {
   status: string;
 }
 
-const TaskStatusColumn = observer(({ status }: TaskStatusColumnProps) => {
-  // Фильтрация задач по статусу
+export const TaskStatusColumn = observer(({ status }: TaskStatusColumnProps) => {
   const tasks = issueStore.boardIssues && issueStore.filteredBoardIssues(status);
 
   return (
-    <div className="flex flex-col gap-4 w-1/3 p-4 bg-accent rounded-lg">
-      <h3 className="text-xl font-semibold">{status}</h3>
-      <div className="space-y-4">
-        {tasks.map((task) => (
-          <TaskCard key={task.id} issue={task} />
+    <div className="flex-1">
+      <h3 className="text-lg font-medium mb-2">{status}</h3>
+      <div className="space-y-2">
+        {tasks.map((issue) => (
+          <TaskCard key={issue.id} issue={issue} onClick={() => taskModalStore.openEdit(issue)} />
         ))}
       </div>
     </div>
   );
 });
-
-export { TaskStatusColumn };

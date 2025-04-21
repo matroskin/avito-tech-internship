@@ -9,7 +9,7 @@ export const BoardFilter = observer(() => {
       value={issueStore.boardFilter?.toString() ?? 'all'}
       onValueChange={(value) => issueStore.setBoardFilter(value === 'all' ? null : parseInt(value))}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Фильтр по доске" />
       </SelectTrigger>
       <SelectContent>

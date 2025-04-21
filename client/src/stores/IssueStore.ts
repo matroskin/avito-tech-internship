@@ -2,6 +2,7 @@ import { makeObservable, observable, action, computed, runInAction } from 'mobx'
 import { getTasks } from '@/api/tasks/getTasks';
 import { getBoardTasks } from '@/api/boards/getBoardTasks';
 import { updateTaskStatus } from '@/api/tasks/updateTaskStatus';
+import { updateTask } from '@/api/tasks/updateTask';
 import type { Task, TaskStatusEnum } from '@/types/task';
 import type { ApiError } from '@/types/error';
 
@@ -30,6 +31,7 @@ class IssueStore {
       setBoardFilter: action,
       filteredBoardIssues: action,
       filteredIssues: computed,
+      updateTask: action,
     });
   }
 
@@ -78,8 +80,10 @@ class IssueStore {
 
   async fetchBoardIssues(boardId: number) {
     this.boardIssues = [];
+
     try {
       const tasks = await getBoardTasks(boardId);
+
       runInAction(() => {
         this.boardIssues = tasks;
         this.error = null;
@@ -111,6 +115,26 @@ class IssueStore {
     };
     update(this.issues);
     update(this.boardIssues);
+  }
+
+  async updateTask(updatedTask: Task) {
+    const updateTaskDto = {
+      assigneeId: updatedTask.assignee?.id ?? 0,
+      title: updatedTask.title,
+      description: updatedTask.description,
+      priority: updatedTask.priority,
+      status: updatedTask.status,
+    };
+
+    await updateTask(updatedTask.id, updateTaskDto);
+
+    runInAction(() => {
+      this.issues = this.issues.map((task) => (task.id === updatedTask.id ? { ...task, ...updatedTask } : task));
+
+      this.boardIssues = this.boardIssues.map((task) =>
+        task.id === updatedTask.id ? { ...task, ...updatedTask } : task,
+      );
+    });
   }
 }
 
